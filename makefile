@@ -2,7 +2,7 @@ TARGET = peopss
 
 #SRC = modules.f90 SPmain.f90 parser.f90 init.f90 allocation.f90 allocateell.f90 3D.f90 cadenas.f90 cadenasMK.f90 fe.f90  fkfun.f90  kai.f90  kinsol.f90  pxs.f90  savetodisk.f90 rands.f90 ellipsoid.f90 dielectric.f90 monomers.definitions-onck.f90 chains.definitions.f90 sphere.f90 kapfromfile.f90
 
-SRC = modules.f90 fe.f90  fkfun.f90 kinsol.f90  muA.f90  readinput.f90  solve.f90  fractions.f90  main.f90 muEO.f90 muNa.f90 
+SRC = modules.f90 fe.f90  fkfun.f90 kinsol.f90  muA.f90  readinput.f90  solve.f90  fractions.f90  main.f90 muEO.f90 muNa.f90 allocation.f90 
 
 HOST=$(shell hostname)
 $(info HOST is ${HOST})
@@ -12,7 +12,7 @@ LFLAGS = -lm /usr/lib/x86_64-linux-gnu/librt.so  -L/usr/local/lib  -lsundials_fk
 
 # some definitions
 SHELL = /bin/bash
-FFLAGS= -O3#  -fbacktrace -fbounds-check # -O3
+FFLAGS= -fbacktrace -fbounds-check # -O3
 
 ifeq ($(HOST),master) 
 

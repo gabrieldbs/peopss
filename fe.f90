@@ -8,7 +8,7 @@ use system
 use const
 implicit none
 
-real*16 Free_energy,elib 
+real*8 Free_energy,elib 
 
 ! Calculation of xsolvent
 !xmAalpha=vectfe(1)

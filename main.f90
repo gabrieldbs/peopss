@@ -10,15 +10,11 @@ use results
   implicit none
   integer i, flagcrash,iii
 
-  real*16 pKw,vsal,KAinput,Kbind,KBinput,KANainput,KBClinput,kte
-  real*16 aa, bb, cc, xNaClbulk
-  real*16 xposbulk,xnegbulk,xHplusbulk,xOHminbulk,Kw,xsalt
-  real*16 xsolvit,phialphamol,phibetamol
-  real*16 xsolvalpha,xsolvbeta,saleihbetamol
-real*16 csalcoef
+real*8 csalcoef
   !print*, 'GIT Version: ', _VERSION
-iter=0
+ntot=4
   call readinput
+  call allocation
   vab=1.
   vpol=vpol/vsol
 
@@ -34,60 +30,41 @@ iter=0
   do i = 1, ncsal ! loop in csal
 
   csalcoef = csalini + (csalfin-csalini)/float(ncsal-1)*float(i-1)  !Na
+  xNaalpha=csalcoef
+!  xNaalpha= 10**(-csalcoef)
 
-  xNaalpha= 10**(-csalcoef)
   xmNaalpha=xNaalpha/(vpos*vsol)
-print*,'xmnaalpha',xmnaalpha
+print*,'xmnaalpha',xmnaalpha,xNaalpha
   K0A = (KA/vsol)/(Na/1.0d24)! 	CHECKEAR
   K0EO = (KEO/vsol)/(Na/1.0d24)!   ''
   K0D = (KD)*(1.0d24/Na) !!!!!!!!!!!!!!!!!!!!!!!
+iter=0
   call solve(flagcrash)
-  
-  flaggg=0
-  
 
 if (flaggg==1)then
 yes=yes+1
 !!PAra guardar data
-!arrayNa(1,yes)=xmNaalpha/Na*1.d24 
-!arrayNa(2,yes)=xmNabeta/Na*1.d24 
+arraymNa(1,yes)=xmNaalpha/Na*1.d24 
+arraymNa(2,yes)=xmNabeta/Na*1.d24 
 
-!arrayCl(1,yes)=xmClalpha/Na*1.d24 
-!arrayCl(2,yes)=xmClbeta/Na*1.d24 
+arraymCl(1,yes)=xmClalpha/Na*1.d24 
+arraymCl(2,yes)=xmClbeta/Na*1.d24 
 
-!arraycsal(1,yes)=arrayNa(1,yes)+arrayCl(1,yes)
-!arraycsal(2,yes)=arrayNa(2,yes)+arrayCl(2,yes)
+arraymcsal(1,yes)=arraymNa(1,yes)+arraymCl(1,yes)
+arraymcsal(2,yes)=arraymNa(2,yes)+arraymCl(2,yes)
 
 
-!arrayA(1,yes)=xAalpha*1.e24/Na/(MA*vpol)  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
-!arrayA(2,yes)=xAbeta*1.e24/Na/(Ma*vpol)
+arraymA(1,yes)=xmAalpha*1.e24/Na  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
+arraymA(2,yes)=xmAbeta*1.e24/Na
 
-!arrayEO(1,yes)=xEOalpha*1.e24/Na/(Meo*vpol)  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
-!arrayEO(2,yes)=xEObeta*1.e24/Na/(MEO*vpol)
+arraymEO(1,yes)=xmEOalpha*1.e24/Na  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
+arraymEO(2,yes)=xmEObeta*1.e24/Na
 
-!arrayrhotot(1,yes)=arrayA(1,yes)+arrayEO(1,yes)
-!arrayrhotot(2,yes)=arrayA(2,yes)+arrayEO(2,yes)
+arraympoltot(1,yes)=xmpoltotalalpha
+arraympoltot(2,yes)=xmpoltotalbeta
 
-!arrayratioEOA(1,yes)=arrayEO(1,yes)arrayA(1,yes)
-!arrayratioEOA(2,yes)=arrayEO(2,yes)/arrayA(2,yes)
-
-!arrayfA_asion(1,yes)=fA_asion_alpha
-!arrayfA_asion(2,yes)=fA_asion_beta
-
-!arrayfEO_asion(1,yes)=fEO_asion_alpha
-!arrayfEO_asion(2,yes)=fEO_asion_beta
-
-!arrayfA_aspol(1,yes)=fA_aspol_alpha
-!arrayfA_aspol(2,yes)=fA_aspol_beta
-
-!arrayfEO_aspol(1,yes)=fEO_aspol_alpha
-!arrayfEO_aspol(2,yes)=fEO_aspol_beta
-
-!arrayfA_unas(1,yes)=fA_unas_alpha
-!arrayfA_unas(2,yes)=fA_unas_beta
-
-!arrayfEO_unas(1,yes)=fEO_unas_alpha
-!arrayfEO_unas(2,yes)=fEO_unas_beta
+arrayratioEOA(1,yes)=ratioEOAalpha 
+arrayratioEOA(2,yes)=ratioEOAbeta 
 
 endif
 
@@ -95,7 +72,18 @@ endif
   enddo ! i
 
 
-!open (unit=40,file='crhototratiobeta.txt',status='replace')
+
+open (unit=3,file='csalpoltotmolalpha.txt',status='replace')
+
+do iii=1,yes
+   write (3,*) arraympoltot(1,iii), arraymcsal(1,iii)
+end do
+
+open (unit=4,file='csalpoltotmolbeta.txt',status='replace')
+
+do iii=1,yes
+   write (4,*) arraympoltot(2,iii), arraymcsal(2,iii)
+end do
 
 !do iii=1,yes
 !   write (40,*) arrayrhotot(2,iii), arrayratioEOA(2,iii)

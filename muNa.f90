@@ -4,7 +4,7 @@ use const
 use system
 use results
 implicit none
-real*16 potquimNa
+real*8 potquimNa
 potquimNA=0
 !xmNaalpha=vectNa(1)/(vpos*vsol)
 !xmNabeta=vectNa(2)/(vpos*vsol)
@@ -13,6 +13,4 @@ potquimNA=0
 
 potquimNa= log(xmNaalpha*vsol) +packconst +neutralconst -log(xmNabeta*vsol)
 
-print* ,potquimNa,xmNaalpha,vsol,packconst,neutralconst,xmNabeta
-stop
 end  subroutine 

@@ -49,6 +49,11 @@ read(8, *), pKEO     ! polymer-polymer attraction strenght in kBT
 read(8, *), basura
 read(8, *), chi  ! cutoff for porr sv interaction in lattice sites
 
+read(8, *), basura
+read(8, *), ratioEOAalphainitial
+
+read(8, *), basura
+read(8, *), xmNabetainitial,xmpoltotalbetainitial,ratioEOAbetainitial
 
 !read(8, *), basura
 !read(8, *), infile ! read input from file:?

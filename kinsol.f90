@@ -31,6 +31,7 @@ end
 
 subroutine fkpset(udata, uscale, fdata, fscale,vtemp1,vtemp2, ier)
 use mkinsol
+use system
 implicit none
 integer *4 ier ! Kinsol error flag
 integer neq, i
@@ -40,7 +41,7 @@ double precision vtemp1(*), vtemp2(*)
 common /psize/ neq
 
 do i = 1, neq
-   pp(i) = 1.0 !0.1 / (1.0+exp(-udata(i)))
+   pp(i) = 0.1 / (1.0+exp(-udata(i)))
 enddo
    ier = 0
 return
@@ -69,12 +70,12 @@ neq=4
 ! INICIA KINSOL
 
 msbpre  = 10 ! maximum number of iterations without prec. setup (?)
-fnormtol = 1.0d-6 ! Function-norm stopping tolerance
-scsteptol = 1.0d-6 ! Function-norm stopping tolerance
+fnormtol = 1.0d-5 ! Function-norm stopping tolerance
+scsteptol = 1.0d-5 ! Function-norm stopping tolerance
 
-maxl = 1000 ! maximum Krylov subspace dimesion (?!?!?!) ! Esto se usa para el preconditioner
+maxl = 10000 ! maximum Krylov subspace dimesion (?!?!?!) ! Esto se usa para el preconditioner
 maxlrst = 5 ! maximum number of restarts
-max_niter = 5000
+max_niter = 10000
 globalstrat = 0
 
 call fnvinits(3, neq, ier) ! fnvinits inits NVECTOR module
