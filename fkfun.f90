@@ -58,7 +58,7 @@ vectfalpha(3)=xmNaalpha
 vectfbeta(1)=xmAbeta
 vectfbeta(2)=xmEObeta
 vectfbeta(3)=xmNabeta
-print*,'vectalpha',vectfalpha
+!print*,'vectalpha',vectfalpha
 call fractions(vectfalpha,vectfrac)
 !vectfractions-> (1) fA_aspol,(2)fEO_aspol,(3) fA_asion (4)fEO_Asion,(5)fA_unas,f(6)fEO_unas
 fEO_aspol_alpha=vectfrac(1)
@@ -74,7 +74,7 @@ fA_unas_alpha=vectfrac(6)
 !testkd=-log10((Na/1.0d24)*xmnaalpha*vsol*fA_unas_alpha*Ma*xmAalpha*vab*(1.-fEo_asion_alpha-fEO_aspol_alpha)/fEO_aspol_alpha) -pKd
 !print*,'testalpha',testKa,testkeo,testkd
 !stop
-stop
+
 call fractions(vectfbeta,vectfrac)
 !vectfractions-> (1) fA_aspol,(2)fEO_aspol,(3) fA_asion (4)fEO_Asion,(5)fA_unas,f(6)fEO_unas
 fEO_aspol_beta=vectfrac(1)
@@ -89,13 +89,13 @@ fA_unas_beta=vectfrac(6)
 !testkd=-log10((Na/1.0d24)*xmNabeta*vsol*fA_unas_beta*Ma*xmAbeta*vab*(1-fEo_asion_beta-fEO_aspol_beta)/fEO_aspol_beta) -pKd
 !print*,'testbeta',testKa,testkeo,testkd
 !stop
-print*,'beta',vectfrac
+!print*,'beta',vectfrac
 !!!!
 
 xmClalpha=-fA_unas_alpha*Ma*xmAalpha + fEO_asion_alpha*Meo*xmEOalpha + xmNaalpha  ! rhoCl en alpha
 xmClbeta=-fA_unas_beta*Ma*xmAbeta + fEO_asion_beta*Meo*xmEObeta + xmNabeta  ! rhoCl en alpha
 
-!print*,'cl',xmclalpha,xmclbeta
+!print*,'cl',xmclalpha,xmclbeta,xmNabeta,xmAbeta,xmEObeta
 xSolventalpha=1. -Ma*vpol*vsol*xmAalpha -Meo*vpol*vsol*xmEOalpha&
 -vpos*vsol*((fA_asion_alpha+fA_aspol_alpha)*Ma*xmAalpha+fEO_asion_alpha*Meo*xmEOalpha)&
 -xmNaalpha*vpos*vsol -xmClalpha*vneg*vsol
@@ -157,7 +157,7 @@ testpcka=testpcka -vneg*vsol*(Ma*xmAalpha*(fA_asion_alpha+fA_aspol_alpha)+Meo*xm
 testpckb=1.-Ma*xmAbeta*vpol*vsol-xmSolventbeta*vsol -Meo*xmEObeta*vpol*vsol-xmNabeta*vpos*vsol-xmClbeta*vneg*vsol
 testpckb=testpckb -vneg*vsol*(Ma*xmAbeta*(fA_asion_beta+fA_aspol_beta)+Meo*xmEObeta*fEO_asion_beta)
 
-print*,'testneutra',testneuta,testneutb,testpcka,testpckb
+!print*,'testneutra',testneuta,testneutb,testpcka,testpckb
 
 
 print*,'Norma , penality', norma,penality
