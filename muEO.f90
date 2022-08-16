@@ -13,14 +13,8 @@ real*8 potquimEO
 !fEo_unas_alpha=vectpotEO(5)
 !fEO_unas_beta=vectpotEO(6)
 !packconst=vectpotEO(7)
-if (fEO_unas_alpha.lt.1E-15)then
-fEO_unas_alpha=1E-15
-endif
-if (feO_unas_beta.lt.1E-15)then
-fEO_unas_beta=1E-15
-endif
 
-potquimEO=log(xmEOalpha*vsol)-log(xmEObeta*vsol)-chi*MeO*(Ma*(xmAalpha-xmAbeta)&
+potquimEO=log(xmEOalpha*vsol)-log(xmEObeta*vsol)-chi*Meo*(Ma*(xmAalpha-xmAbeta)&
 +Meo*(xmEOalpha-xmEObeta))+Meo*(log(fEO_unas_alpha)-log(fEO_unas_beta))-packconst*Meo*vpol*vsol
 
 end subroutine 

@@ -105,6 +105,7 @@ call fkinsetvin('CONSTR_VEC', constr, ier) ! constraint vector
 ! CALL FKINSPTFQMR (MAXL, IER)
 call fkinspgmr(maxl, maxlrst, ier) !  Scale Preconditioned GMRES solution of linear system (???)
 !call fkinspbcg(maxl, ier) !  Scale Preconditioned BCG
+!call fkindense(neq,ier)
 
 if (ier .ne. 0) then
   print*, 'call_kinsol: SUNDIALS_ERROR: FKINSPGMR returned IER = ', ier

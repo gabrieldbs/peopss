@@ -4,6 +4,7 @@ module system
 integer Ma,Meo
 real*8 rsal
 integer ntot
+real*8 vpolcero
 real*8 ratioEOaalphainitial
 real*8 xmNabetainitial,xmpoltotalbetainitial,ratioEOAbetainitial
 real*8 vpol,vpos,vneg,vab

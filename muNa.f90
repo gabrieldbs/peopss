@@ -11,6 +11,6 @@ potquimNA=0
 !packconst=vectNa(3)
 !neutralconst=vectNa(4)
 
-potquimNa= log(xmNaalpha*vsol) +packconst +neutralconst -log(xmNabeta*vsol)
+potquimNa= log(xmNaalpha*vsol) +packconst*vsol*vpos +neutralconst -log(xmNabeta*vsol)
 
 end  subroutine 
