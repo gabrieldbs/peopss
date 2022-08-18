@@ -15,7 +15,7 @@ real*8 checkresults
 integer ier, i,newt, j, ii, jj
 integer flagcrash
 integer flag
-integer ngrid
+integer ngrid,iii
 real*8 xiteri
 
    nmax=npasos     ! npasos por consola i
@@ -27,7 +27,7 @@ linearsolver = 2
 flaggg=0
 
    do i=0, npasosrhotot
-  
+ flaggg=0 
       xiteri = (rhototmax-rhototmin)*float(i)/float(npasosrhotot) + rhototmin
       xmpoltotalalpha= xiteri  !Segunda variable que fijamos  xmpoltotalalpha
 
@@ -53,7 +53,6 @@ print*,'x1',xmNaalpha,xmpoltotalalpha,x1
       
 
        if ((norma.lt.criterio).and.( checkresults .gt.tolerancia)) then ! encuentra solucion
-
          flaggg=1
          print*,'Grid Point OK',yes
 
@@ -93,11 +92,11 @@ arraymcsal(1,yes)=arraymNa(1,yes)+arraymCl(1,yes)!+faltta la parte asoc.
 arraymcsal(2,yes)=arraymNa(2,yes)+arraymCl(2,yes)!falta parte asoc
 
 
-arraymA(1,yes)=xmAalpha*Ma/Na*1.e24  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
-arraymA(2,yes)=xmAbeta*Ma/Na*1.e24
+arraymA(1,yes)=xmAalpha/Na*1.e24  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
+arraymA(2,yes)=xmAbeta/Na*1.e24
 
-arraymEO(1,yes)=xmEOalpha*Meo/Na*1.e24  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
-arraymEO(2,yes)=xmEObeta*Meo/Na*1.e24
+arraymEO(1,yes)=xmEOalpha/Na*1.e24  ! concentracion molar de monomeros, el "*2" da cuenta de que es conc. polA+polB  
+arraymEO(2,yes)=xmEObeta/Na*1.e24
 
 !arraympoltot(1,yes)=xmpoltotalbeta
 !arraympoltot(2,yes)=xmpoltotalbeta
@@ -110,9 +109,53 @@ arraympoltot(2,yes)=arraymA(2,yes)+arraymEO(2,yes)
 
 arrayratioEOA(1,yes)=arraymEO(1,yes)/arraymA(1,yes)
 arrayratioEOA(2,yes)=arraymEO(2,yes)/arraymA(2,yes)
-endif
 
-       endif
+
+open (unit=3,file='csal_poltot_mol_alpha.txt',status='replace')
+
+do iii=1,yes
+   write (3,*) arraympoltot(1,iii), arraymcsal(1,iii)
+end do
+
+open (unit=4,file='csal_poltot_mol_beta.txt',status='replace')
+
+do iii=1,yes
+   write (4,*) arraympoltot(2,iii), arraymcsal(2,iii)
+end do
+
+open (unit=40,file='cpoltot_ratioEOA_mol_alpha.txt',status='replace')
+
+do iii=1,yes
+   write (40,*) arrayratioEOA(1,iii), arraympoltot(1,iii)
+end do
+
+open (unit=30,file='cpoltot_ratioEOA_mol_beta.txt',status='replace')
+
+do iii=1,yes
+   write (30,*) arrayratioEOA(2,iii), arraympoltot(2,iii)
+end do
+
+open (unit=400,file='csal_ratioEOA_mol_alpha.txt',status='replace')
+
+do iii=1,yes
+   write (400,*) arrayratioEOA(1,iii), arraymcsal(1,iii)
+end do
+
+open (unit=300,file='csal_ratioEOA_mol_beta.txt',status='replace')
+
+do iii=1,yes
+   write (300,*) arrayratioEOA(2,iii), arraymcsal(2,iii)
+end do 
+!  call endall     ! clean up and terminate
+close(3)
+close(4)
+close(30)
+close(40)
+close(300)
+close(400)
+ endif
+
+ endif
 enddo
 return
 end subroutine

@@ -34,7 +34,7 @@ use mkinsol
 use system
 implicit none
 integer *4 ier ! Kinsol error flag
-integer neq, i
+integer *4 neq, i
 double precision udata(*), uscale(*), fdata(*), fscale(*)
 double precision vtemp1(*), vtemp2(*)
 
@@ -70,12 +70,12 @@ neq=4
 ! INICIA KINSOL
 
 msbpre  = 10 ! maximum number of iterations without prec. setup (?)
-fnormtol = 1.0d-5 ! Function-norm stopping tolerance
-scsteptol = 1.0d-5 ! Function-norm stopping tolerance
+fnormtol = 1.0d-3 !Function-norm stopping tolerance
+scsteptol = 1.0d-8 ! Function-norm stopping tolerance
 
 maxl = 10000 ! maximum Krylov subspace dimesion (?!?!?!) ! Esto se usa para el preconditioner
 maxlrst = 5 ! maximum number of restarts
-max_niter = 10000
+max_niter = 100000
 globalstrat = 0
 
 call fnvinits(3, neq, ier) ! fnvinits inits NVECTOR module
@@ -132,8 +132,8 @@ print*, 'IER:', ier
 if (ier .lt. 0) then
       print*, 'call_kinsol: SUNDIALS_ERROR: FKINSOL returned IER = ', ier
       print*, 'call_kinsol: Linear Solver returned IER = ', iout(9)
-      call fkinfree
-      stop
+!      call fkinfree
+!      stop
 endif
 
 do i = 1, neq ! output

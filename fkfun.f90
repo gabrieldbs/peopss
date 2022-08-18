@@ -29,13 +29,21 @@ real*8 penalityA,penalityNa,penalityEO
 integer i
 
 ! xmnaalpha , xmpoltotalpha  son inputs
+!print*,'x',x
+if(x(1).lt.0)then
+x(1)=1E-15
+print*,'error en x(1)!!!'
+!stop
+endif
+
 if(x(2).lt.0)then
-x(2)=1E-10
+x(2)=1E-15
 print*,'error en x(2)!!!'
 !stop
 endif
+
 if(x(3).lt.0)then
-x(3)=1E-10
+x(3)=1E-15
 print*,'error en x(3)!!!!'
 !stop
 endif
@@ -58,7 +66,7 @@ vectfalpha(3)=xmNaalpha
 vectfbeta(1)=xmAbeta
 vectfbeta(2)=xmEObeta
 vectfbeta(3)=xmNabeta
-!print*,'vectalpha',vectfalpha
+!print*,'vectalpha',vectfalpha,ratioEoAalpha,xmpoltotalalpha
 call fractions(vectfalpha,vectfrac)
 !vectfractions-> (1) fA_aspol,(2)fEO_aspol,(3) fA_asion (4)fEO_Asion,(5)fA_unas,f(6)fEO_unas
 fEO_aspol_alpha=vectfrac(1)
@@ -94,7 +102,10 @@ fA_unas_beta=vectfrac(6)
 
 xmClalpha=-fA_unas_alpha*Ma*xmAalpha + fEO_asion_alpha*Meo*xmEOalpha + xmNaalpha  ! rhoCl en alpha
 xmClbeta=-fA_unas_beta*Ma*xmAbeta + fEO_asion_beta*Meo*xmEObeta + xmNabeta  ! rhoCl en alpha
-
+if (xmClalpha.lt.0.0 .or. xmClbeta.lt.0.0)then
+print*,'test  Cl fail',xmclalpha,xmclbeta
+stop
+endif
 !print*,'cl',xmclalpha,xmclbeta,xmNabeta,xmAbeta,xmEObeta
 xSolventalpha=1. -Ma*vpol*vsol*xmAalpha -Meo*vpol*vsol*xmEOalpha&
 -vpos*vsol*((fA_asion_alpha+fA_aspol_alpha)*Ma*xmAalpha+fEO_asion_alpha*Meo*xmEOalpha)&
@@ -108,7 +119,10 @@ xSolventbeta=1. - Ma*vpol*vsol*xmAbeta -Meo*vpol*vsol*xmEObeta&
 xmSolventalpha=xSolventalpha/vsol
 xmSolventbeta =xSolventbeta/vsol
 !print*,'solv',xmsolventalpha,xmsolventbeta
-
+if (xmsolventalpha.lt.0.0 .or. xmsolventbeta.lt.0.0)then
+print*,'test  Solvent fail',xmsolventalpha,xmsolventbeta
+stop
+endif
 packconst=(1./vsol)*(log(xSolventalpha)-log(xSolventbeta) ) ! betapi 
 neutralconst=log(xmClbeta*vsol)+vneg*vsol*packconst-log(xmClalpha*vsol) ! phi
 !print*,'const',packconst,neutralconst
@@ -131,8 +145,10 @@ call fe(elib)
 free_ener=elib
 
 penality=1
-Penality=(xmNabeta-xmNaalpha)**2+(xmpoltotalalpha-xmpoltotalbeta)**2
-Penality=Penality+(ratioEOAalpha-ratioEOAbeta)**2
+Penality=abs(xmNabeta-xmNaalpha)/(xmNabeta*0.5+xmNaalpha*0.5)
+Penality=Penality+abs(xmpoltotalalpha-xmpoltotalbeta)/(xmpoltotalalpha*0.5+xmpoltotalbeta*0.5)
+Penality=Penality+abs(ratioEOAalpha-ratioEOAbeta)/(ratioeoaalpha*0.5+ratioeoabeta*0.5)
+!penality=penality/(xmNaalpha +xmpoltotalalpha+ratioeoAalpha)
  f(1)=free_ener/Penality
 
  f(2)=potNa/Penality
@@ -145,23 +161,22 @@ iter = iter + 1
 norma = 0.0
 
 do i = 1, 4
+!print*,'f',f(i)
 norma = norma +(f(i))**2    
 enddo
 
-testneuta=xmNaalpha -xmClalpha-Ma*xmAalpha*fA_unas_alpha+fEO_asion_alpha*Meo*xmEOalpha
-testneutb=xmNabeta -xmClbeta-Ma*xmAbeta*fA_unas_beta+fEO_asion_beta*Meo*xmEObeta
+!testneuta=xmNaalpha -xmClalpha-Ma*xmAalpha*fA_unas_alpha+fEO_asion_alpha*Meo*xmEOalpha
+!testneutb=xmNabeta -xmClbeta-Ma*xmAbeta*fA_unas_beta+fEO_asion_beta*Meo*xmEObeta
 
-testpcka=1.-Ma*xmAalpha*vpol*vsol-xmSolventalpha*vsol -Meo*xmEOalpha*vpol*vsol-xmNaalpha*vpos*vsol-xmClalpha*vneg*vsol
-testpcka=testpcka -vneg*vsol*(Ma*xmAalpha*(fA_asion_alpha+fA_aspol_alpha)+Meo*xmEOalpha*fEO_asion_alpha)
+!testpcka=1.-Ma*xmAalpha*vpol*vsol-xmSolventalpha*vsol -Meo*xmEOalpha*vpol*vsol-xmNaalpha*vpos*vsol-xmClalpha*vneg*vsol
+!testpcka=testpcka -vneg*vsol*(Ma*xmAalpha*(fA_asion_alpha+fA_aspol_alpha)+Meo*xmEOalpha*fEO_asion_alpha)
  
-testpckb=1.-Ma*xmAbeta*vpol*vsol-xmSolventbeta*vsol -Meo*xmEObeta*vpol*vsol-xmNabeta*vpos*vsol-xmClbeta*vneg*vsol
-testpckb=testpckb -vneg*vsol*(Ma*xmAbeta*(fA_asion_beta+fA_aspol_beta)+Meo*xmEObeta*fEO_asion_beta)
-
+!testpckb=1.-Ma*xmAbeta*vpol*vsol-xmSolventbeta*vsol -Meo*xmEObeta*vpol*vsol-xmNabeta*vpos*vsol-xmClbeta*vneg*vsol
+!testpckb=testpckb -vneg*vsol*(Ma*xmAbeta*(fA_asion_beta+fA_aspol_beta)+Meo*xmEObeta*fEO_asion_beta)
 !print*,'testneutra',testneuta,testneutb,testpcka,testpckb
 
 
-print*,'Norma , penality', norma,penality
-!if (Norma.lt.1E-5)then
+print*,'Norma , penality', norma,penality !, f(1), f(2), f(3) , f(4) !if (Norma.lt.1E-5)then
 !print*,'xmNaalpha,xpoltotalAlpha',xmNaalpha,xmpoltotalAlpha
 !print*,'x',x
 !endif
